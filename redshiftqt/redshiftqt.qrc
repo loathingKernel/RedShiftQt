@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/app">
+        <file alias="icon">images/redshift.ico</file>
+    </qresource>
+
+</RCC>
