@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -15,16 +15,20 @@ TEMPLATE = app
 SOURCES += \
     main.cpp \
     redshiftqttray.cpp \
+    redshiftqtprefs.cpp \
     redshiftqtlog.cpp \
-    redshiftqtprefs.cpp
+    redshiftqt.cpp \
+    qdoublespinboxlist.cpp
 
 HEADERS += \
-    redshiftqt.h \
     redshiftqttray.h \
-    redshiftqtlog.h
+    redshiftqtprefs.h \
+    redshiftqtlog.h \
+    redshiftqt.h \
+    qdoublespinboxlist.h
 
 FORMS   += \
-    redshiftqt.ui \
+    redshiftqtprefs.ui \
     redshiftqtlog.ui
 
 RESOURCES += \

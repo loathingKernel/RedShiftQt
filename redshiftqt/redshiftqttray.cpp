@@ -2,27 +2,52 @@
 
 RedShiftQtTray::RedShiftQtTray(QMainWindow* parent) : QSystemTrayIcon(parent)
 {
-    actionPrefs = new QAction(tr("&Preferences"), this);
-    connect(actionPrefs, SIGNAL(triggered()), this, SLOT(showPrefs()));
+    menu = new QMenu();
 
-    actionLog = new QAction(tr("&View Log"), this);
-    connect(actionLog, SIGNAL(triggered()), this, SLOT(showLog()));
+    status = new QAction(tr("&Enabled"), this);
+    connect(status, SIGNAL(triggered()), parent, SLOT(toggle()));
+    status->setCheckable(true);
+    menu->addAction(status);
 
-    actionQuit = new QAction(tr("&Quit"), this);
-    connect(actionQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
+    suspend = new QMenu(tr("&Suspend for"));
+    connect(suspend, SIGNAL(triggered(QAction*)), parent, SLOT(suspend(QAction*)));
 
-    trayMenu = new QMenu();
-    trayMenu->addAction(actionPrefs);
-    trayMenu->addAction(actionLog);
-    trayMenu->addSeparator();
-    trayMenu->addAction(actionQuit);
+    suspend30m = new QAction(tr("&30 minutes"));
+    suspend30m->setData(30);
+    suspend->addAction(suspend30m);
 
-    setContextMenu(trayMenu);
+    suspend1h = new QAction(tr("&1 hour"));
+    suspend1h->setData(60);
+    suspend->addAction(suspend1h);
+
+    suspend2h = new QAction(tr("&2 hours"));
+    suspend2h->setData(120);
+    suspend->addAction(suspend2h);
+
+    menu->addMenu(suspend);
+
+    log = new QAction(tr("&View Info"), this);
+    connect(log, SIGNAL(triggered()), parent, SLOT(showLog()));
+    menu->addAction(log);
+
+    menu->addSeparator();
+
+    prefs = new QAction(tr("&Preferences"), this);
+    connect(prefs, SIGNAL(triggered()), parent, SLOT(showPrefs()));
+    menu->addAction(prefs);
+
+    menu->addSeparator();
+
+    quit = new QAction(tr("&Quit"), this);
+    connect(quit, SIGNAL(triggered()), qApp, SLOT(quit()));
+    menu->addAction(quit);
+
+    setContextMenu(menu);
     setIcon(parent->windowIcon());
     setToolTip(parent->windowTitle());
 
     connect(this, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
-            this, SLOT(activated(QSystemTrayIcon::ActivationReason)));
+            parent, SLOT(activated(QSystemTrayIcon::ActivationReason)));
 }
 
 RedShiftQtTray::~RedShiftQtTray()
@@ -30,17 +55,3 @@ RedShiftQtTray::~RedShiftQtTray()
 
 }
 
-void RedShiftQtTray::showPrefs()
-{
-
-}
-
-void RedShiftQtTray::showLog()
-{
-
-}
-
-void RedShiftQtTray::activated(QSystemTrayIcon::ActivationReason reason)
-{
-
-}
