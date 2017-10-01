@@ -21,12 +21,26 @@ RedShiftQtLog::~RedShiftQtLog()
 
 void RedShiftQtLog::setStatus(QString status)
 {
-    ui->labelStatusInfo->setText(status);
+    ui->labelStatusValue->setText(status);
 }
 
-void RedShiftQtLog::setInfo(QStringList info)
+void RedShiftQtLog::setInfo(QString info)
 {
-
+    QStringList info_list = info.split('\n');
+    QStringList::iterator i;
+    for(i = info_list.begin(); i != info_list.end(); ++i) {
+        if(i->startsWith("Location")) {
+            ui->labelLocValue->setText(i->split(": ").at(1));
+            ++i;
+        }
+        if(i->startsWith("Period")) {
+            ui->labelPeriodValue->setText(i->split(": ").at(1));
+            ++i;
+        }
+        if(i->startsWith("Color temp")) {
+            ui->labelTempValue->setText(i->split(": ").at(1));
+        }
+    }
 }
 
 void RedShiftQtLog::appendToLog(QString input)

@@ -5,12 +5,12 @@ RedShiftQtTray::RedShiftQtTray(QMainWindow* parent) : QSystemTrayIcon(parent)
     menu = new QMenu();
 
     status = new QAction(tr("&Enabled"), this);
-    connect(status, SIGNAL(triggered()), parent, SLOT(toggle()));
+    connect(status, SIGNAL(triggered()), parent, SLOT(toggleRedshift()));
     status->setCheckable(true);
     menu->addAction(status);
 
     suspend = new QMenu(tr("&Suspend for"));
-    connect(suspend, SIGNAL(triggered(QAction*)), parent, SLOT(suspend(QAction*)));
+    connect(suspend, SIGNAL(triggered(QAction*)), parent, SLOT(suspendRedshift(QAction*)));
 
     suspend30m = new QAction(tr("&30 minutes"));
     suspend30m->setData(30);
@@ -47,7 +47,7 @@ RedShiftQtTray::RedShiftQtTray(QMainWindow* parent) : QSystemTrayIcon(parent)
     setToolTip(parent->windowTitle());
 
     connect(this, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
-            parent, SLOT(activated(QSystemTrayIcon::ActivationReason)));
+            parent, SLOT(toggleRedshift(QSystemTrayIcon::ActivationReason)));
 }
 
 RedShiftQtTray::~RedShiftQtTray()

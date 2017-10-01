@@ -25,14 +25,17 @@ public:
     ~RedShiftQt();
 
 private slots:
-    void onRedshiftStateChanged(QProcess::ProcessState);
-    void onReadyRead();
+    void startRedshift();
+    void stopRedshift();
+    void onRedshiftStarted();
+    void onRedshiftFinished();
+    QString getRedshiftInfo();
 
     void onConfChanged();
 
-    void toggle();
-    void suspend(QAction*);
-    void activated(QSystemTrayIcon::ActivationReason);
+    void toggleRedshift();
+    void toggleRedshift(QSystemTrayIcon::ActivationReason);
+    void suspendRedshift(QAction*);
     void showPrefs();
     void showLog();
 
@@ -44,8 +47,7 @@ private:
     QProcess *redshift;
     QProcess *helper;
 
-    QTimer *susp_timer;
-    QTimer *info_timer;
+    QTimer *timer;
 
     QSettings *conf;
 

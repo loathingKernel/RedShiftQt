@@ -24,121 +24,110 @@ RedShiftQt::RedShiftQt(QWidget *parent) :
 
     log = new RedShiftQtLog(this);
 
-    info_timer = new QTimer(this);
-    info_timer->setTimerType(Qt::VeryCoarseTimer);
-
-    susp_timer = new QTimer(this);
-    connect(susp_timer, SIGNAL(timeout()), this, SLOT(toggle()));
-    susp_timer->setTimerType(Qt::VeryCoarseTimer);
-
-    redshift = new QProcess(this);
-    connect(redshift, SIGNAL(stateChanged(QProcess::ProcessState)),
-            this, SLOT(onRedshiftStateChanged(QProcess::ProcessState)));
-    //connect(redshift, SIGNAL(readyRead()), this, SLOT(onProcReadyRead()));
-    //connect(redshift, SINGAL(readyReadStandardError(), this, SLOT(onProcReadyRead)));
-    onRedshiftStateChanged(QProcess::NotRunning);
-
-    redshift->setProgram(conf->value("redshift_path").toString());
-    redshift->setArguments(getArguments());
-
-    if(conf->value("start_enabled").toBool())
-        redshift->start(QProcess::ReadOnly);
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(startRedshift()));
+    timer->setTimerType(Qt::VeryCoarseTimer);
 
     helper = new QProcess(this);
     helper->setProgram(conf->value("redshift_path").toString());
+
+    redshift = new QProcess(this);
+    connect(redshift, SIGNAL(started()), this, SLOT(onRedshiftStarted()));
+    connect(redshift, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(onRedshiftFinished()));
+    redshift->setProgram(conf->value("redshift_path").toString());
+    redshift->setArguments(getArguments());
+    onRedshiftFinished();
+    if(conf->value("start_enabled").toBool())
+        redshift->start(QProcess::ReadOnly);
 
     prefs = new RedShiftQtPrefs(this);
     connect(prefs, SIGNAL(confChanged()), this, SLOT(onConfChanged()));
 
     if(conf->value("show_prefs").toBool())
-        prefs->show();
+        showPrefs();
 }
 
 RedShiftQt::~RedShiftQt()
 {
+    stopRedshift();
+}
+
+QString RedShiftQt::getRedshiftInfo()
+{
+    helper->setArguments(QStringList("-pv"));
+    helper->start(QProcess::ReadOnly);
+    helper->waitForFinished();
+    return(helper->readAllStandardOutput());
+}
+
+void RedShiftQt::startRedshift()
+{
+    timer->stop();
+    redshift->start(QProcess::ReadOnly);
+    redshift->waitForStarted();
+}
+
+void RedShiftQt::stopRedshift()
+{
     redshift->kill();
     redshift->waitForFinished();
-    helper->kill();
+    helper->setArguments(QStringList("-x"));
+    helper->start(QProcess::ReadOnly);
     helper->waitForFinished();
 }
 
-void RedShiftQt::onRedshiftStateChanged(QProcess::ProcessState state)
+void RedShiftQt::onRedshiftStarted()
 {
-    switch(state) {
-    case QProcess::Running :
-        tray->setIcon(QIcon(":/tray/on"));
-        tray->setToolTip(windowTitle() +": Running");
-        tray->status->setChecked(true);
-        tray->suspend->setEnabled(true);
-        log->setStatus(QString("Enabled"));
-        log->appendToLog(redshift->program().toUtf8() + " " + redshift->arguments().join(" ").toUtf8());
-        break;
-
-    case QProcess::NotRunning :
-        tray->setIcon(QIcon(":/tray/off"));
-        tray->setToolTip(windowTitle() +": Suspended");
-        tray->status->setChecked(false);
-        tray->suspend->setEnabled(false);
-        log->setInfo(QStringList("Disabled"));
-        log->appendToLog("Redshift stopped");
-        break;
-
-    default:
-        break;
-    }
-    qDebug("Process state: %d", redshift->state());
+    tray->setIcon(QIcon(":/tray/on"));
+    tray->setToolTip(windowTitle() + ": Running");
+    tray->status->setChecked(true);
+    tray->suspend->setEnabled(true);
+    log->setStatus(QString("Enabled"));
+    log->setInfo(getRedshiftInfo());
+    log->appendToLog("Redshift was started with: " + redshift->arguments().join(" ").toUtf8());
 }
 
-void RedShiftQt::onReadyRead()
+void RedShiftQt::onRedshiftFinished()
 {
-
+    tray->setIcon(QIcon(":/tray/off"));
+    tray->setToolTip(windowTitle() + ": Suspended");
+    tray->status->setChecked(false);
+    tray->suspend->setEnabled(false);
+    log->setStatus(QString("Disabled"));
+    log->setInfo(getRedshiftInfo());
+    log->appendToLog("Redshift was suspended");
 }
 
 void RedShiftQt::onConfChanged()
 {
     int state = redshift->state();
-    if(state) {
-        redshift->kill();
-        redshift->waitForFinished();
-    }
+    if(state) stopRedshift();
     redshift->setProgram(conf->value("redshift_path").toString());
     redshift->setArguments(getArguments());
     helper->setProgram(conf->value("redshift_path").toString());
-    if(state) {
-        redshift->start(QProcess::ReadOnly);
-    }
+    if(state) startRedshift();
 }
 
-void RedShiftQt::toggle(void)
+void RedShiftQt::toggleRedshift()
 {
-    if(redshift->state() == QProcess::Running) {
-        redshift->kill();
-        redshift->waitForFinished();
-        helper->setArguments(QStringList("-x"));
-        helper->start(QProcess::ReadOnly);
-        helper->waitForFinished();
-    } else {
-        susp_timer->stop();
-        redshift->start(QProcess::ReadOnly);
-        redshift->waitForStarted();
-    }
+    if(redshift->state()) stopRedshift();
+    else startRedshift();
 }
 
-void RedShiftQt::suspend(QAction* action)
+void RedShiftQt::toggleRedshift(QSystemTrayIcon::ActivationReason reason)
 {
-    toggle();
+    if(reason == QSystemTrayIcon::Trigger) toggleRedshift();
+}
 
-    susp_timer->setInterval(action->data().toInt() * 60 * 1000);
-    susp_timer->start();
+void RedShiftQt::suspendRedshift(QAction* action)
+{
+    stopRedshift();
+
+    timer->setInterval(action->data().toInt() * 60 * 1000);
+    timer->start();
 
     tray->setToolTip(tray->toolTip() + QString(" for %1 minutes").arg(action->data().toInt()));
-    log->appendToLog(QString("Suspending reshift for %1 minutes").arg(susp_timer->interval()/60/1000));
-}
-
-void RedShiftQt::activated(QSystemTrayIcon::ActivationReason reason)
-{
-    if(reason == QSystemTrayIcon::Trigger)
-        toggle();
+    log->appendToLog(QString("Suspending reshift for %1 minutes").arg(timer->interval()/60/1000));
 }
 
 void RedShiftQt::showPrefs()
@@ -149,6 +138,7 @@ void RedShiftQt::showPrefs()
 
 void RedShiftQt::showLog()
 {
+    log->setInfo(getRedshiftInfo());
     log->setVisible(true);
     log->raise();
 }

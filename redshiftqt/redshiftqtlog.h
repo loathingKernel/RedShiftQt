@@ -22,7 +22,7 @@ public:
     ~RedShiftQtLog();
 
     void setStatus(QString);
-    void setInfo(QStringList);
+    void setInfo(QString);
     void appendToLog(QString);
 
 protected:

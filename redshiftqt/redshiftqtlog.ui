@@ -40,28 +40,28 @@
          </widget>
         </item>
         <item row="0" column="2">
-         <widget class="QLabel" name="labelStatusInfo">
+         <widget class="QLabel" name="labelStatusValue">
           <property name="text">
            <string>Disabled</string>
           </property>
          </widget>
         </item>
         <item row="2" column="2">
-         <widget class="QLabel" name="labelTempInfo">
+         <widget class="QLabel" name="labelTempValue">
           <property name="text">
            <string>6500K</string>
           </property>
          </widget>
         </item>
         <item row="1" column="2">
-         <widget class="QLabel" name="labelLocInfo">
+         <widget class="QLabel" name="labelLocValue">
           <property name="text">
            <string>N, W</string>
           </property>
          </widget>
         </item>
         <item row="3" column="2">
-         <widget class="QLabel" name="labelPeriodInfo">
+         <widget class="QLabel" name="labelPeriodValue">
           <property name="text">
            <string>Day</string>
           </property>
