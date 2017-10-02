@@ -18,4 +18,4 @@ build_script:
 
 
 artifacts:
-- path: RedShiftQt.exe
+- path: release\RedShiftQt.exe
