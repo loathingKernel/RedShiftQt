@@ -3,14 +3,19 @@ version: 0.1.0.{branch}.{build}
 install:
 - cmd: >-
     set QTDIR=C:\Qt\5.7\mingw53_32
+
     set PATH=%PATH%;%QTDIR%\bin;C:\MinGW\bin
 
 build_script:
 - cmd: >-
     mkdir build
+
     cd build
+
     qmake ..\redshiftqt\RedShiftQt.pro
+
     mingw32-make
+
 
 artifacts:
 - path: RedShiftQt.exe
