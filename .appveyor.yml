@@ -26,6 +26,7 @@ init:
   - set PATH=C:\Qt\%qt%\bin;%PATH%
   - if not %platform%==mingw call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %platform%
   - if not %platform%==mingw (set spec=win32-msvc2015) else (set spec=win32-g++)
+  - if not %platform%==mingw (set PATH=C:\Qt\Tools\QtCreator\bin;%PATH%)
 
 before_build:
   - md build-%suffix%
