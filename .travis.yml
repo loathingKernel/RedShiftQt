@@ -4,6 +4,7 @@ before_install:
   - sudo apt-get install -qq qt5-qmake qtbase5-dev
 
 script:
-  - qmake -qt=qt5 -v
-  - qmake -qt=qt5
+  - mkdir build
+  - cd build
+  - qmake ../redshiftqt/RedShiftQt.pro
   - make
