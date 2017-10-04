@@ -1,3 +1,7 @@
+os: linux
+dist: trusty
+language: cpp
+
 before_install:
   - sudo add-apt-repository --yes ppa:beineri/opt-qt571-trusty
   - sudo apt-get update -qq
