@@ -3,7 +3,7 @@
         <file alias="icon">images/redshift.ico</file>
     </qresource>
     <qresource prefix="/tray">
-        <file alias="off">images/redshift-status-off.svg</file>
-        <file alias="on">images/redshift-status-on.svg</file>
+        <file alias="off">images/redshift-status-off.ico</file>
+        <file alias="on">images/redshift-status-on.ico</file>
     </qresource>
 </RCC>
