@@ -60,6 +60,9 @@ RedShiftQtPrefs::RedShiftQtPrefs(QWidget *parent) :
     onCheckBoxBrStateChanged(Qt::CheckState::Unchecked);
     onCheckBoxGamStateChanged(Qt::CheckState::Unchecked);
 
+    resize(minimumSizeHint());
+    setFixedSize(size());
+
     loadConf();
 }
 

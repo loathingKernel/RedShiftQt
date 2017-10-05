@@ -11,6 +11,9 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = RedShiftQt
 TEMPLATE = app
 
+win32-g++ {
+    QMAKE_LFLAGS += -static
+}
 
 SOURCES += \
     main.cpp \
