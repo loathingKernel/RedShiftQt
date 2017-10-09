@@ -27,7 +27,7 @@ RedShiftQtPrefs::RedShiftQtPrefs(QWidget *parent) :
     connect(ui->checkBoxGam, SIGNAL(stateChanged(int)), this, SLOT(onCheckBoxGamStateChanged(int)));
 
     connect(ui->pushButtonImport, SIGNAL(clicked()), this, SLOT(onImportClicked()));
-    connect(ui->buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()),
+    connect(ui->buttonBox->button(QDialogButtonBox::Reset), SIGNAL(clicked()),
             this, SLOT(onCancelClicked()));
     connect(ui->buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()),
             this, SLOT(onApplyClicked()));

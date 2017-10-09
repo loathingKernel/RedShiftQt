@@ -25,9 +25,6 @@ public:
     void setInfo(QString);
     void appendToLog(QString);
 
-protected:
-    void closeEvent(QCloseEvent* event);
-
 private slots:
     void clearLog(void);
     void saveLog(void);

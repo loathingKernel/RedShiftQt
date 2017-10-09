@@ -10,6 +10,8 @@ RedShiftQtLog::RedShiftQtLog(QWidget *parent) :
 
     connect(ui->pushButtonClear, SIGNAL(clicked()), this, SLOT(clearLog()));
     connect(ui->pushButtonSave, SIGNAL(clicked()), this, SLOT(saveLog()));
+    connect(ui->buttonBox->button(QDialogButtonBox::Close), SIGNAL(clicked()),
+            this, SLOT(close()));
 
     ui->plainTextEditLog->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
 }
@@ -46,12 +48,6 @@ void RedShiftQtLog::setInfo(QString info)
 void RedShiftQtLog::appendToLog(QString input)
 {
     ui->plainTextEditLog->appendPlainText(QTime::currentTime().toString() + ": " + input);
-}
-
-void RedShiftQtLog::closeEvent(QCloseEvent* event)
-{
-    //hide();
-    //event->ignore();
 }
 
 void RedShiftQtLog::clearLog()
