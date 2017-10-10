@@ -2,12 +2,6 @@ version: 0.1.0.{branch}.{build}
 
 environment:
   matrix:
-  # MinGW Static
-  - name: win32_static
-    platform: mingw
-    qt: static\5.7.1\mingw53_32
-    suffix: mingw_x86
-
   # MinGW
   - name: win32
     platform: mingw
@@ -25,6 +19,12 @@ environment:
     platform: amd64
     qt: 5.7\msvc2015_64
     suffix: msvc2015_x64
+	
+  # MinGW Static
+  - name: win32_static
+    platform: mingw
+    qt: static\5.7.1\mingw53_32
+    suffix: mingw_x86
 
 init:
   - if %platform%==mingw set PATH=%PATH:C:\Program Files\Git\usr\bin;=%
