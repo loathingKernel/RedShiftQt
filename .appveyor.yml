@@ -3,10 +3,10 @@ version: 0.1.0.{branch}.{build}
 environment:
   matrix:
   # MinGW Static
-#  - name: win32_static
-#    platform: mingw
-#    qt: static\5.7.1\mingw53_32
-#    suffix: mingw_x86
+  - name: win32_static
+    platform: mingw
+    qt: static\5.7.1\mingw53_32
+    suffix: mingw_x86
 
   # MinGW
   - name: win32
@@ -33,8 +33,8 @@ init:
   - if not %platform%==mingw call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %platform%
   - if not %platform%==mingw (set spec=win32-msvc2015) else (set spec=win32-g++)
   - if not %platform%==mingw set PATH=C:\Qt\Tools\QtCreator\bin;%PATH%
-#  - if %name%==win32_static curl -fsS -o qt-static-mingw53_32-5.7.1.7z "https://drive.google.com/uc?export=download&confirm=nOBt&id=0B72hTjcCv9EAYWgyUVUwVTVKbFE"
-#  - if %name%==win32_static 7z x qt-static-mingw53_32-5.7.1.7z -oC:\Qt\static
+  - if %name%==win32_static curl -fsS -o static-qt-mingw53_32-5.7.1.7z "https://dl.dropboxusercontent.com/s/m9q3j2osi0xx0qi/static-qt-mingw53_32-5.7.1.7z"
+  - if %name%==win32_static 7z x static-qt-mingw53_32-5.7.1.7z -oC:\Qt\static
 
 before_build:
   - md build-%suffix%
