@@ -5,24 +5,28 @@ environment:
   # MinGW
   - name: win32
     platform: mingw
+    linking: dynamic
     qt: 5.7\mingw53_32
     suffix: mingw_x86
 
   # MSVC x86
   - name: win32
     platform: x86
+    linking: dynamic
     qt: 5.7\msvc2015
     suffix: msvc2015_x86
 
   # MSVC x64
   - name: win64
     platform: amd64
+    linking: dynamic
     qt: 5.7\msvc2015_64
     suffix: msvc2015_x64
 
   # MinGW Static
-  - name: win32_static
+  - name: win32
     platform: mingw
+    linking: static
     qt: static\5.7.1\mingw53_32
     suffix: mingw_x86
 
@@ -33,8 +37,9 @@ init:
   - if not %platform%==mingw call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %platform%
   - if not %platform%==mingw (set spec=win32-msvc2015) else (set spec=win32-g++)
   - if not %platform%==mingw set PATH=C:\Qt\Tools\QtCreator\bin;%PATH%
-  - if %name%==win32_static curl -fsS -o static-qt-mingw53_32-5.7.1.7z "https://dl.dropboxusercontent.com/s/m9q3j2osi0xx0qi/static-qt-mingw53_32-5.7.1.7z"
-  - if %name%==win32_static 7z x static-qt-mingw53_32-5.7.1.7z -oC:\Qt\static
+  - if %linking%==static curl -fsS -o static-qt-mingw53_32-5.7.1.7z "https://dl.dropboxusercontent.com/s/m9q3j2osi0xx0qi/static-qt-mingw53_32-5.7.1.7z"
+  - if %linking%==static 7z x static-qt-mingw53_32-5.7.1.7z -oC:\Qt\static
+  - if %linking%==static rem C:\projects\redshiftqt
 
 before_build:
   - md build-%suffix%
