@@ -39,7 +39,7 @@ init:
   - if not %platform%==mingw set PATH=C:\Qt\Tools\QtCreator\bin;%PATH%
   - if %linking%==static curl -fsS -o static-qt-mingw53_32-5.7.1.7z "https://dl.dropboxusercontent.com/s/m9q3j2osi0xx0qi/static-qt-mingw53_32-5.7.1.7z"
   - if %linking%==static 7z x static-qt-mingw53_32-5.7.1.7z -oC:\Qt\static
-  - if %linking%==static rmdir C:\projects\redshiftqt /SQ
+  - if %linking%==static rmdir C:\projects\redshiftqt /s /q
 
 before_build:
   - md build-%suffix%
