@@ -29,21 +29,21 @@ RedShiftQt::RedShiftQt(QWidget *parent) :
     timer->setTimerType(Qt::VeryCoarseTimer);
 
     helper = new QProcess(this);
-    helper->setProgram(conf->value("redshift_path").toString());
+    helper->setProgram(conf->value("redshift_path", "").toString());
 
     redshift = new QProcess(this);
     connect(redshift, SIGNAL(started()), this, SLOT(onRedshiftStarted()));
     connect(redshift, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(onRedshiftFinished()));
-    redshift->setProgram(conf->value("redshift_path").toString());
+    redshift->setProgram(conf->value("redshift_path", "").toString());
     redshift->setArguments(getArguments());
     onRedshiftFinished();
-    if(conf->value("start_enabled").toBool())
+    if(conf->value("start_enabled", false).toBool())
         redshift->start(QProcess::ReadOnly);
 
     prefs = new RedShiftQtPrefs(this);
     connect(prefs, SIGNAL(confChanged()), this, SLOT(onConfChanged()));
 
-    if(conf->value("show_prefs").toBool())
+    if(conf->value("show_prefs", true).toBool())
         showPrefs();
 }
 

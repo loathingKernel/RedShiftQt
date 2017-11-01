@@ -76,9 +76,13 @@ void RedShiftQtPrefs::onToolButtonPathClicked()
     QString path = QFileDialog::getOpenFileName(
                 this,
                 tr("Find redshift executable"),
+#if defined(Q_OS_WIN)
                 "",
                 "redshift executable (redshift.exe)");
-
+#elif defined(Q_OS_LINUX)
+                "/usr/bin/",
+                "redshift executable (redshift)");
+#endif
     ui->lineEditPath->setText(path);
 }
 
@@ -192,7 +196,7 @@ void RedShiftQtPrefs::onApplyClicked()
     QMessageBox msg;
     msg.setText("<h4>Error(s):</h4>");
     if(ui->lineEditPath->text().isEmpty()) {
-        errors.append("Missing redshift executable location.");
+        errors.append("Missing redshift executable.");
     } else {
         if(ui->checkBoxLocalSettings->checkState()) {
             if(ui->comboBoxLocProvider->currentText() == "manual") {
@@ -203,7 +207,7 @@ void RedShiftQtPrefs::onApplyClicked()
             }
         } else {
             if(ui->lineEditConf->text().isEmpty()) {
-                errors.append("Missing redshift cofiguration file location.");
+                errors.append("Missing redshift configuration file.");
             }
         }
     }
