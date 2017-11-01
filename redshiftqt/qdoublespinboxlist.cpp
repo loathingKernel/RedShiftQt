@@ -11,7 +11,7 @@ QStringList QDoubleSpinBoxList::value(void) {
 void QDoubleSpinBoxList::setValue(QStringList v)
 {
     for(int i = 0; i < this->count(); i++) {
-        this->at(i)->setValue(v.value(i, v.at(0)).toDouble());
+        this->at(i)->setValue(v.value(i, v.value(0)).toDouble());
     }
 }
 
